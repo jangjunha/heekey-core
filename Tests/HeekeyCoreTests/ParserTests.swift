@@ -21,15 +21,6 @@ final class ParserTests: XCTestCase {
   func testParse() throws {
     let testCases: [(String, [Symbol])] = [
       (
-        "ㄱㅏㄱㅅ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱ),
-          .init(종성.ㅅ),
-        ]
-      ),
-      (
         "ㄱㅏㄲㄱ",
         [
           .init(초성.ㄱ),
@@ -70,8 +61,7 @@ final class ParserTests: XCTestCase {
         [
           .init(초성.ㄱ),
           .init(중성.ㅏ),
-          .init(종성.ㄱ),
-          .init(종성.ㅅ),
+          .init(종성.ㄱㅅ),
         ]
       ),
       (
@@ -79,8 +69,7 @@ final class ParserTests: XCTestCase {
         [
           .init(초성.ㄱ),
           .init(중성.ㅏ),
-          .init(종성.ㄱ),
-          .init(종성.ㅅ),
+          .init(종성.ㄱㅅ),
           .init(초성.ㄱ),
         ]
       ),  // ㄱㅅ + 자음 => 겹받침 완성
