@@ -1,5 +1,4 @@
-import Foundation
-import XCTest
+import Testing
 
 @testable import HeekeyCore
 
@@ -10,87 +9,77 @@ import XCTest
 // 종성
 // ᆨ ᆩ ᆪ ᆫ ᆬ ᆭ ᆮ ᆯ ᆰ ᆱ ᆲ ᆳ ᆴ ᆵ ᆶ ᆷ ᆸ ᆹ ᆺ ᆻ ᆼ ᆽ ᆾ ᆿ ᇀ ᇁ ᇂ
 
-final class ParserTests: XCTestCase {
-  func testTokensToString() throws {
-    XCTAssertEqual(
-      str_to_tokens("ㅁㅁㅁ").string,
-      "ㅁㅁㅁ"
-    )
+@Suite struct ParserTests {
+  @Test func testTokensToString() {
+    #expect(str_to_tokens("ㅁㅁㅁ").string == "ㅁㅁㅁ")
   }
 
-  func testParse() throws {
-    let testCases: [(String, [Symbol])] = [
-      (
-        "ㄱㅏㄲㄱ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱㄱ),
-          .init(초성.ㄱ),
-        ]
-      ),
-      (
-        "ㄱㅏㄸㄱ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(초성.ㄷㄷ),
-          .init(초성.ㄱ),
-        ]
-      ),
-      (
-        "ㄱㅏㄴㅏ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(초성.ㄴ),
-          .init(중성.ㅏ),
-        ]
-      ),
-      (
-        "ㄱㅏㄱㄱ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱ),
-          .init(초성.ㄱ),
-        ]
-      ),  // ㄱㄱ + ? => 겹받칩 불가
-      (
-        "ㄱㅏㄱㅅ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱㅅ),
-        ]
-      ),
-      (
-        "ㄱㅏㄱㅅㄱ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱㅅ),
-          .init(초성.ㄱ),
-        ]
-      ),  // ㄱㅅ + 자음 => 겹받침 완성
-      (
-        "ㄱㅏㄱㅅㅏ",
-        [
-          .init(초성.ㄱ),
-          .init(중성.ㅏ),
-          .init(종성.ㄱ),
-          .init(초성.ㅅ),
-          .init(중성.ㅏ),
-        ]
-      ),  // ㄱㅅ + 모음 => 겹받침 안함
-    ]
-
-    for (str, expected) in testCases {
-      XCTAssertEqual(
-        str_to_tokens(str).parse(),
-        expected
-      )
-    }
+  @Test(arguments: [
+    (
+      "ㄱㅏㄲㄱ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(종성.ㄱㄱ),
+        Symbol(초성.ㄱ),
+      ]
+    ),
+    (
+      "ㄱㅏㄸㄱ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(초성.ㄷㄷ),
+        Symbol(초성.ㄱ),
+      ]
+    ),
+    (
+      "ㄱㅏㄴㅏ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(초성.ㄴ),
+        Symbol(중성.ㅏ),
+      ]
+    ),
+    (
+      "ㄱㅏㄱㄱ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(종성.ㄱ),
+        Symbol(초성.ㄱ),
+      ]
+    ),  // ㄱㄱ + ? => 겹받칩 불가
+    (
+      "ㄱㅏㄱㅅ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(종성.ㄱㅅ),
+      ]
+    ),
+    (
+      "ㄱㅏㄱㅅㄱ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(종성.ㄱㅅ),
+        Symbol(초성.ㄱ),
+      ]
+    ),  // ㄱㅅ + 자음 => 겹받침 완성
+    (
+      "ㄱㅏㄱㅅㅏ",
+      [
+        Symbol(초성.ㄱ),
+        Symbol(중성.ㅏ),
+        Symbol(종성.ㄱ),
+        Symbol(초성.ㅅ),
+        Symbol(중성.ㅏ),
+      ]
+    ),  // ㄱㅅ + 모음 => 겹받침 안함
+  ]) func testParse(arg: (String, [Symbol])) {
+    let (str, expected) = arg
+    #expect(str_to_tokens(str).parse() == expected)
   }
-
 }
