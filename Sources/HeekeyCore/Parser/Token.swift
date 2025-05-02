@@ -1,10 +1,10 @@
 /// 지워지는 단위
-public enum Token {
+public enum Token: Equatable {
   case 자음(자음)
   case 모음(모음)
 }
 
-public enum 자음 {
+public enum 자음: Equatable {
   case ㄱ
   case ㄱㄱ
   case ㄴ
@@ -26,7 +26,7 @@ public enum 자음 {
   case ㅎ
 }
 
-public enum 모음 {
+public enum 모음: Equatable {
   case ㅏ  // ㅏ
   case ㅑ  // ㅏ 획
   case ㅓ  // ㅏ ㅏ
