@@ -86,12 +86,10 @@ final class ParserTests: XCTestCase {
     ]
 
     for (str, expected) in testCases {
-      XCTContext.runActivity(named: "Test parsing \(str)") { activity in
-        XCTAssertEqual(
-          str_to_tokens(str).parse(),
-          expected
-        )
-      }
+      XCTAssertEqual(
+        str_to_tokens(str).parse(),
+        expected
+      )
     }
   }
 
