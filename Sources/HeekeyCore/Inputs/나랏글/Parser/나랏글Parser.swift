@@ -1,212 +1,92 @@
 extension Sequence where Element == Heekey나랏글Token {
   func parse() -> [나랏글Symbol] {
-    NaratgeulPostParser.parse(tokens: 나랏글PreParser.parse(tokens: self))
+    NaratgeulPostParser.parse(
+      tokens: TypeA자음PreParser<나랏글모음>.parse(
+        tokens: self.map {
+          .init(from: $0)
+        }
+      ).map {
+        .init(from: $0)
+      }
+    )
   }
 }
 
-enum 나랏글PreParser {
-  /// 자음을 초성 혹은 종성으로 분류
-
-  public static func parse<S: Sequence>(tokens: S) -> [나랏글IntermediateToken]
-  where S.Element == Heekey나랏글Token {
-    var outputs = [나랏글IntermediateToken]()
-    var it = tokens.makeIterator()
-
-    var prev = it.next()
-    while let curr = prev {
-      let next = it.next()
-      let res = parse_next(last: outputs.last, p1: curr, p2: next)
-      outputs.append(res)
-      prev = next
-    }
-    return outputs
-  }
-
-  static func parse_next(last: 나랏글IntermediateToken?, p1: Heekey나랏글Token, p2: Heekey나랏글Token?) -> 나랏글IntermediateToken {
-    switch (last, p1, p2) {
-    // 모음은 패스
-    case let (_, .모음(p1), _): return .init(p1)
-    // 종성이 될 수 없는 자음들
-    case let (_, .자음(p1), _) where [.ㄷㄷ, .ㅂㅂ, .ㅈㅈ].contains(p1): return .init(나랏글초성(from: p1))
-
-    case let (nil, .자음(p1), _): return .init(나랏글초성(from: p1))
-    case let (.초성(_), .자음(p1), _): return .init(나랏글초성(from: p1))
-
-    // 받침이 가능하지만 뒤에 모음이 나오면 초성
-    case let (.모음, .자음(p1), .모음(_)):
-      return .init(나랏글초성(from: p1))
-    case let (.모음, .자음(p1), .자음(_)),
-      let (.모음, .자음(p1), nil):
-      return .init(나랏글종성(from: p1))
-
-    // 겹받침 완성
-    case (.종성(.ㄱ), .자음(.ㅅ), .자음(_)),
-      (.종성(.ㄱ), .자음(.ㅅ), nil):
-      return .init(나랏글종성(from: .ㅅ))
-    case let (.종성(.ㄴ), .자음(p1), .자음(_)) where [.ㅈ, .ㅎ].contains(p1),
-      let (.종성(.ㄴ), .자음(p1), nil) where [.ㅈ, .ㅎ].contains(p1):
-      return .init(나랏글종성(from: p1))
-    case let (.종성(.ㄹ), .자음(p1), .자음(_)) where [.ㄱ, .ㅁ, .ㅂ, .ㅅ, .ㅌ, .ㅍ, .ㅎ].contains(p1),
-      let (.종성(.ㄹ), .자음(p1), nil) where [.ㄱ, .ㅁ, .ㅂ, .ㅅ, .ㅌ, .ㅍ, .ㅎ].contains(p1):
-      return .init(나랏글종성(from: p1))
-    case (.종성(.ㅂ), .자음(.ㅅ), .자음(_)),
-      (.종성(.ㅂ), .자음(.ㅅ), nil):
-      return .init(나랏글종성(from: .ㅅ))
-    // 겹받침 완성 케이스 외 겹받침 불가
-    case let (.종성(_), .자음(p1), .자음(_)),
-      let (.종성(_), .자음(p1), nil):
-      return .init(나랏글초성(from: p1))
-
-    // 모음 등장으로 겹받침 안함
-    case let (.종성(_), .자음(p1), .모음(_)):
-      return .init(나랏글초성(from: p1))
+fileprivate extension TypeA자음PreParserInputToken<나랏글모음> {
+  init(from: Heekey나랏글Token) {
+    switch from {
+    case .자음(.ㄱ): self = .자음(.ㄱ)
+    case .자음(.ㄱㄱ): self = .자음(.ㄱㄱ)
+    case .자음(.ㄴ): self = .자음(.ㄴ)
+    case .자음(.ㄷ): self = .자음(.ㄷ)
+    case .자음(.ㄷㄷ): self = .자음(.ㄷㄷ)
+    case .자음(.ㄹ): self = .자음(.ㄹ)
+    case .자음(.ㅁ): self = .자음(.ㅁ)
+    case .자음(.ㅂ): self = .자음(.ㅂ)
+    case .자음(.ㅂㅂ): self = .자음(.ㅂㅂ)
+    case .자음(.ㅅ): self = .자음(.ㅅ)
+    case .자음(.ㅅㅅ): self = .자음(.ㅅㅅ)
+    case .자음(.ㅇ): self = .자음(.ㅇ)
+    case .자음(.ㅈ): self = .자음(.ㅈ)
+    case .자음(.ㅈㅈ): self = .자음(.ㅈㅈ)
+    case .자음(.ㅊ): self = .자음(.ㅊ)
+    case .자음(.ㅋ): self = .자음(.ㅋ)
+    case .자음(.ㅌ): self = .자음(.ㅌ)
+    case .자음(.ㅍ): self = .자음(.ㅍ)
+    case .자음(.ㅎ): self = .자음(.ㅎ)
+    case .모음(let v): self = .모음(v)
     }
   }
 }
 
-enum NaratgeulPostParser {
-  /// 조합 가능한 자소들을 조합하여 중성으로 변환 (모음, 받침)
-
-  public static func parse<S: Sequence>(tokens: S) -> [나랏글Symbol]
-  where S.Element == 나랏글IntermediateToken {
-    var it = tokens.makeIterator()
-    switch (it.next(), it.next(), it.next()) {
-    case (nil, _, _): return []
-
-    // 모음 조합
-    case (.모음(.ㅣ), _, _):
-      return [.중성(.ㅣ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅡ), .모음(.ㅣ), _):
-      return [.중성(.ㅢ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅡ), _, _):
-      return [.중성(.ㅡ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅠ), _, _):
-      return [.중성(.ㅠ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅜ), .모음(.ㅣ), _):
-      return [.중성(.ㅟ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅜ), .모음(.ㅓ), .모음(.ㅣ)):
-      return [.중성(.ㅞ)] + parse(tokens: tokens.dropFirst(3))
-    case (.모음(.ㅜ), .모음(.ㅓ), _):
-      return [.중성(.ㅝ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅜ), _, _):
-      return [.중성(.ㅜ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅛ), _, _):
-      return [.중성(.ㅛ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅗ), .모음(.ㅣ), _):
-      return [.중성(.ㅚ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅗ), .모음(.ㅏ), .모음(.ㅣ)):
-      return [.중성(.ㅙ)] + parse(tokens: tokens.dropFirst(3))
-    case (.모음(.ㅗ), .모음(.ㅏ), _):
-      return [.중성(.ㅘ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅗ), _, _):
-      return [.중성(.ㅗ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅕ), .모음(.ㅣ), _):
-      return [.중성(.ㅖ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅕ), _, _):
-      return [.중성(.ㅕ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅓ), .모음(.ㅣ), _):
-      return [.중성(.ㅔ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅓ), _, _):
-      return [.중성(.ㅓ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅑ), .모음(.ㅣ), _):
-      return [.중성(.ㅒ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅑ), _, _):
-      return [.중성(.ㅑ)] + parse(tokens: tokens.dropFirst(1))
-    case (.모음(.ㅏ), .모음(.ㅣ), _):
-      return [.중성(.ㅐ)] + parse(tokens: tokens.dropFirst(2))
-    case (.모음(.ㅏ), _, _):
-      return [.중성(.ㅏ)] + parse(tokens: tokens.dropFirst(1))
-
-    // 받침 조합
-    case (.종성(.ㄱ), .종성(.ㅅ), _): return [.종성(.ㄱㅅ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄴ), .종성(.ㅈ), _): return [.종성(.ㄴㅈ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄴ), .종성(.ㅎ), _): return [.종성(.ㄴㅎ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㄱ), _): return [.종성(.ㄹㄱ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅁ), _): return [.종성(.ㄹㅁ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅂ), _): return [.종성(.ㄹㅂ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅅ), _): return [.종성(.ㄹㅅ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅌ), _): return [.종성(.ㄹㅌ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅍ), _): return [.종성(.ㄹㅍ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㄹ), .종성(.ㅎ), _): return [.종성(.ㄹㅎ)] + parse(tokens: tokens.dropFirst(2))
-    case (.종성(.ㅂ), .종성(.ㅅ), _): return [.종성(.ㅂㅅ)] + parse(tokens: tokens.dropFirst(2))
-
-    case (.초성(let v), _, _): return [.초성(v)] + parse(tokens: tokens.dropFirst())
-    case (.종성(let v), _, _): return [.종성(v)] + parse(tokens: tokens.dropFirst())
-    }
-  }
-}
-
-extension 나랏글초성 {
-  init(from token: Heekey나랏글자음) {
-    switch token {
-    case .ㄱ: self = .ㄱ
-    case .ㄱㄱ: self = .ㄱㄱ
-    case .ㄴ: self = .ㄴ
-    case .ㄷ: self = .ㄷ
-    case .ㄷㄷ: self = .ㄷㄷ
-    case .ㄹ: self = .ㄹ
-    case .ㅁ: self = .ㅁ
-    case .ㅂ: self = .ㅂ
-    case .ㅂㅂ: self = .ㅂㅂ
-    case .ㅅ: self = .ㅅ
-    case .ㅅㅅ: self = .ㅅㅅ
-    case .ㅇ: self = .ㅇ
-    case .ㅈ: self = .ㅈ
-    case .ㅈㅈ: self = .ㅈㅈ
-    case .ㅊ: self = .ㅊ
-    case .ㅋ: self = .ㅋ
-    case .ㅌ: self = .ㅌ
-    case .ㅍ: self = .ㅍ
-    case .ㅎ: self = .ㅎ
-    }
-  }
-}
-
-extension 나랏글중성 {
-  init(from token: Heekey나랏글모음) {
-    switch token {
-    case .ㅏ: self = .ㅏ
-    case .ㅑ: self = .ㅑ
-    case .ㅓ: self = .ㅓ
-    case .ㅕ: self = .ㅕ
-    case .ㅗ: self = .ㅗ
-    case .ㅛ: self = .ㅛ
-    case .ㅜ: self = .ㅜ
-    case .ㅠ: self = .ㅠ
-    case .ㅡ: self = .ㅡ
-    case .ㅣ: self = .ㅣ
-    }
-  }
-}
-
-extension 나랏글종성 {
-  init(from token: Heekey나랏글자음) {
-    switch token {
-    case .ㄱ: self = .ㄱ
-    case .ㄱㄱ: self = .ㄱㄱ
-    case .ㄴ: self = .ㄴ
-    case .ㄷ: self = .ㄷ
-    case .ㄹ: self = .ㄹ
-    case .ㅁ: self = .ㅁ
-    case .ㅂ: self = .ㅂ
-    case .ㅅ: self = .ㅅ
-    case .ㅅㅅ: self = .ㅅㅅ
-    case .ㅇ: self = .ㅇ
-    case .ㅈ: self = .ㅈ
-    case .ㅊ: self = .ㅊ
-    case .ㅋ: self = .ㅋ
-    case .ㅌ: self = .ㅌ
-    case .ㅍ: self = .ㅍ
-    case .ㅎ: self = .ㅎ
-    case .ㄷㄷ:
-      assertionFailure("No 종성 for \(token)")
-      self = .ㄷ
-    case .ㅂㅂ:
-      assertionFailure("No 종성 for \(token)")
-      self = .ㅂ
-    case .ㅈㅈ:
-      assertionFailure("No 종성 for \(token)")
-      self = .ㅈ
+fileprivate extension 나랏글IntermediateToken {
+  init(from: TypeA자음PreParserOutputToken<나랏글모음>) {
+    switch from {
+    case .초성(.ㄱ): self = .초성(.ㄱ)
+    case .초성(.ㄱㄱ): self = .초성(.ㄱㄱ)
+    case .초성(.ㄴ): self = .초성(.ㄴ)
+    case .초성(.ㄷ): self = .초성(.ㄷ)
+    case .초성(.ㄷㄷ): self = .초성(.ㄷㄷ)
+    case .초성(.ㄹ): self = .초성(.ㄹ)
+    case .초성(.ㅁ): self = .초성(.ㅁ)
+    case .초성(.ㅂ): self = .초성(.ㅂ)
+    case .초성(.ㅂㅂ): self = .초성(.ㅂㅂ)
+    case .초성(.ㅅ): self = .초성(.ㅅ)
+    case .초성(.ㅅㅅ): self = .초성(.ㅅㅅ)
+    case .초성(.ㅇ): self = .초성(.ㅇ)
+    case .초성(.ㅈ): self = .초성(.ㅈ)
+    case .초성(.ㅈㅈ): self = .초성(.ㅈㅈ)
+    case .초성(.ㅊ): self = .초성(.ㅊ)
+    case .초성(.ㅋ): self = .초성(.ㅋ)
+    case .초성(.ㅌ): self = .초성(.ㅌ)
+    case .초성(.ㅍ): self = .초성(.ㅍ)
+    case .초성(.ㅎ): self = .초성(.ㅎ)
+    case .종성(.ㄱ): self = .종성(.ㄱ)
+    case .종성(.ㄱㄱ): self = .종성(.ㄱㄱ)
+    case .종성(.ㄴ): self = .종성(.ㄴ)
+    case .종성(.ㄷ): self = .종성(.ㄷ)
+    case .종성(.ㄹ): self = .종성(.ㄹ)
+    case .종성(.ㅁ): self = .종성(.ㅁ)
+    case .종성(.ㅂ): self = .종성(.ㅂ)
+    case .종성(.ㅅ): self = .종성(.ㅅ)
+    case .종성(.ㅅㅅ): self = .종성(.ㅅㅅ)
+    case .종성(.ㅇ): self = .종성(.ㅇ)
+    case .종성(.ㅈ): self = .종성(.ㅈ)
+    case .종성(.ㅊ): self = .종성(.ㅊ)
+    case .종성(.ㅋ): self = .종성(.ㅋ)
+    case .종성(.ㅌ): self = .종성(.ㅌ)
+    case .종성(.ㅍ): self = .종성(.ㅍ)
+    case .종성(.ㅎ): self = .종성(.ㅎ)
+    case .종성(.ㄷㄷ):
+      assertionFailure("No 종성 for \(from)")
+      self = .종성(.ㄷ)
+    case .종성(.ㅂㅂ):
+      assertionFailure("No 종성 for \(from)")
+      self = .종성(.ㅂ)
+    case .종성(.ㅈㅈ):
+      assertionFailure("No 종성 for \(from)")
+      self = .종성(.ㅈ)
+    case .모음(let v): self = .모음(v)
     }
   }
 }
