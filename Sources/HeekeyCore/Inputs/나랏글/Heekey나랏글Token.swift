@@ -1,10 +1,10 @@
-/// 지워지는 단위
-public enum Token: Equatable {
-  case 자음(자음)
-  case 모음(모음)
+/// Erasible Unit
+public enum Heekey나랏글Token: Equatable {
+  case 자음(Heekey나랏글자음)
+  case 모음(Heekey나랏글모음)
 }
 
-public enum 자음: Equatable {
+public enum Heekey나랏글자음: Equatable {
   case ㄱ
   case ㄱㄱ
   case ㄴ
@@ -26,7 +26,7 @@ public enum 자음: Equatable {
   case ㅎ
 }
 
-public enum 모음: Equatable {
+public enum Heekey나랏글모음: Equatable {
   case ㅏ  // ㅏ
   case ㅑ  // ㅏ 획
   case ㅓ  // ㅏ ㅏ
@@ -39,12 +39,12 @@ public enum 모음: Equatable {
   case ㅣ  // ㅣ
 }
 
-extension Token {
-  public init(_ value: 자음) {
+public extension Heekey나랏글Token {
+  init(_ value: Heekey나랏글자음) {
     self = .자음(value)
   }
 
-  public init(_ value: 모음) {
+  init(_ value: Heekey나랏글모음) {
     self = .모음(value)
   }
 }

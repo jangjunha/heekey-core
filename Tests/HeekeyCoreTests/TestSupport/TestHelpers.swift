@@ -1,6 +1,8 @@
 import HeekeyCore
 
-func char_to_token(_ ch: Character) -> Token {
+func char_to_나랏글token(_ ch: Character) -> Heekey나랏글Token {
+  typealias 자음 = Heekey나랏글자음
+  typealias 모음 = Heekey나랏글모음
   switch ch {
   case "ㄱ": return .init(자음.ㄱ)
   case "ㄲ": return .init(자음.ㄱㄱ)
@@ -35,6 +37,6 @@ func char_to_token(_ ch: Character) -> Token {
   }
 }
 
-func str_to_tokens(_ str: String) -> [Token] {
-  return str.map(char_to_token)
+func str_to_나랏글tokens(_ str: String) -> [Heekey나랏글Token] {
+  return str.map(char_to_나랏글token)
 }

@@ -1,17 +1,15 @@
-import Foundation
-
-extension Sequence where Element == Token {
-  func parse() -> [Symbol] {
-    PostParser.parse(tokens: PreParser.parse(tokens: self))
+extension Sequence where Element == Heekey나랏글Token {
+  func parse() -> [나랏글Symbol] {
+    NaratgeulPostParser.parse(tokens: 나랏글PreParser.parse(tokens: self))
   }
 }
 
-enum PreParser {
+enum 나랏글PreParser {
   /// 자음을 초성 혹은 종성으로 분류
 
-  public static func parse<S: Sequence>(tokens: S) -> [IntermediateToken]
-  where S.Element == Token {
-    var outputs = [IntermediateToken]()
+  public static func parse<S: Sequence>(tokens: S) -> [나랏글IntermediateToken]
+  where S.Element == Heekey나랏글Token {
+    var outputs = [나랏글IntermediateToken]()
     var it = tokens.makeIterator()
 
     var prev = it.next()
@@ -24,53 +22,53 @@ enum PreParser {
     return outputs
   }
 
-  static func parse_next(last: IntermediateToken?, p1: Token, p2: Token?) -> IntermediateToken {
+  static func parse_next(last: 나랏글IntermediateToken?, p1: Heekey나랏글Token, p2: Heekey나랏글Token?) -> 나랏글IntermediateToken {
     switch (last, p1, p2) {
     // 모음은 패스
     case let (_, .모음(p1), _): return .init(p1)
     // 종성이 될 수 없는 자음들
-    case let (_, .자음(p1), _) where [.ㄷㄷ, .ㅂㅂ, .ㅈㅈ].contains(p1): return .init(초성(from: p1))
+    case let (_, .자음(p1), _) where [.ㄷㄷ, .ㅂㅂ, .ㅈㅈ].contains(p1): return .init(나랏글초성(from: p1))
 
-    case let (nil, .자음(p1), _): return .init(초성(from: p1))
-    case let (.초성(_), .자음(p1), _): return .init(초성(from: p1))
+    case let (nil, .자음(p1), _): return .init(나랏글초성(from: p1))
+    case let (.초성(_), .자음(p1), _): return .init(나랏글초성(from: p1))
 
     // 받침이 가능하지만 뒤에 모음이 나오면 초성
     case let (.모음, .자음(p1), .모음(_)):
-      return .init(초성(from: p1))
+      return .init(나랏글초성(from: p1))
     case let (.모음, .자음(p1), .자음(_)),
       let (.모음, .자음(p1), nil):
-      return .init(종성(from: p1))
+      return .init(나랏글종성(from: p1))
 
     // 겹받침 완성
     case (.종성(.ㄱ), .자음(.ㅅ), .자음(_)),
       (.종성(.ㄱ), .자음(.ㅅ), nil):
-      return .init(종성(from: .ㅅ))
+      return .init(나랏글종성(from: .ㅅ))
     case let (.종성(.ㄴ), .자음(p1), .자음(_)) where [.ㅈ, .ㅎ].contains(p1),
       let (.종성(.ㄴ), .자음(p1), nil) where [.ㅈ, .ㅎ].contains(p1):
-      return .init(종성(from: p1))
+      return .init(나랏글종성(from: p1))
     case let (.종성(.ㄹ), .자음(p1), .자음(_)) where [.ㄱ, .ㅁ, .ㅂ, .ㅅ, .ㅌ, .ㅍ, .ㅎ].contains(p1),
       let (.종성(.ㄹ), .자음(p1), nil) where [.ㄱ, .ㅁ, .ㅂ, .ㅅ, .ㅌ, .ㅍ, .ㅎ].contains(p1):
-      return .init(종성(from: p1))
+      return .init(나랏글종성(from: p1))
     case (.종성(.ㅂ), .자음(.ㅅ), .자음(_)),
       (.종성(.ㅂ), .자음(.ㅅ), nil):
-      return .init(종성(from: .ㅅ))
+      return .init(나랏글종성(from: .ㅅ))
     // 겹받침 완성 케이스 외 겹받침 불가
     case let (.종성(_), .자음(p1), .자음(_)),
       let (.종성(_), .자음(p1), nil):
-      return .init(초성(from: p1))
+      return .init(나랏글초성(from: p1))
 
     // 모음 등장으로 겹받침 안함
     case let (.종성(_), .자음(p1), .모음(_)):
-      return .init(초성(from: p1))
+      return .init(나랏글초성(from: p1))
     }
   }
 }
 
-enum PostParser {
+enum NaratgeulPostParser {
   /// 조합 가능한 자소들을 조합하여 중성으로 변환 (모음, 받침)
 
-  public static func parse<S: Sequence>(tokens: S) -> [Symbol]
-  where S.Element == IntermediateToken {
+  public static func parse<S: Sequence>(tokens: S) -> [나랏글Symbol]
+  where S.Element == 나랏글IntermediateToken {
     var it = tokens.makeIterator()
     switch (it.next(), it.next(), it.next()) {
     case (nil, _, _): return []
@@ -138,8 +136,8 @@ enum PostParser {
   }
 }
 
-extension 초성 {
-  init(from token: 자음) {
+extension 나랏글초성 {
+  init(from token: Heekey나랏글자음) {
     switch token {
     case .ㄱ: self = .ㄱ
     case .ㄱㄱ: self = .ㄱㄱ
@@ -164,8 +162,8 @@ extension 초성 {
   }
 }
 
-extension 중성 {
-  init(from token: 모음) {
+extension 나랏글중성 {
+  init(from token: Heekey나랏글모음) {
     switch token {
     case .ㅏ: self = .ㅏ
     case .ㅑ: self = .ㅑ
@@ -181,8 +179,8 @@ extension 중성 {
   }
 }
 
-extension 종성 {
-  init(from token: 자음) {
+extension 나랏글종성 {
+  init(from token: Heekey나랏글자음) {
     switch token {
     case .ㄱ: self = .ㄱ
     case .ㄱㄱ: self = .ㄱㄱ
