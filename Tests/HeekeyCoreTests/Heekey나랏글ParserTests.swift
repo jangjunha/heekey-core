@@ -12,6 +12,19 @@ import Testing
 @Suite struct Heekey나랏글ParserTests {
   @Test(arguments: [
     (
+      "ㄱㅡㅣ",
+      [
+        나랏글Symbol(나랏글초성.ㄱ),
+        나랏글Symbol(나랏글중성.ㅢ),
+      ]
+    ),
+  ]) func testParse모음(arg: (String, [나랏글Symbol])) {
+    let (str, expected) = arg
+    #expect(str_to_나랏글tokens(str).parse() == expected)
+  }
+
+  @Test(arguments: [
+    (
       "ㄱㅏㄲㄱ",
       [
         나랏글Symbol(나랏글초성.ㄱ),
@@ -74,7 +87,7 @@ import Testing
         나랏글Symbol(나랏글중성.ㅏ),
       ]
     ),  // ㄱㅅ + 모음 => 겹받침 안함
-  ]) func testParse(arg: (String, [나랏글Symbol])) {
+  ]) func testParse받침(arg: (String, [나랏글Symbol])) {
     let (str, expected) = arg
     #expect(str_to_나랏글tokens(str).parse() == expected)
   }
