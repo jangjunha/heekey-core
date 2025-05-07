@@ -1,10 +1,10 @@
-public enum Symbol {
-  case 초성(초성)
-  case 중성(중성)
-  case 종성(종성)
+enum 나랏글Symbol {
+  case 초성(나랏글초성)
+  case 중성(나랏글중성)
+  case 종성(나랏글종성)
 }
 
-public enum 초성 {
+enum 나랏글초성 {
   case ㄱ
   case ㄱㄱ
   case ㄴ
@@ -26,7 +26,7 @@ public enum 초성 {
   case ㅎ
 }
 
-public enum 중성 {
+enum 나랏글중성 {
   case ㅏ  // ㅏ
   case ㅐ  // ㅏ ㅣ
   case ㅑ  // ㅏ 획
@@ -50,7 +50,7 @@ public enum 중성 {
   case ㅣ  // ㅣ
 }
 
-public enum 종성 {
+enum 나랏글종성 {
   case ㄱ
   case ㄱㄱ
   case ㄱㅅ
@@ -80,23 +80,23 @@ public enum 종성 {
   case ㅎ
 }
 
-extension Symbol: Equatable {}
+extension 나랏글Symbol: Equatable {}
 
-extension Symbol {
-  public init(_ value: 초성) {
+extension 나랏글Symbol {
+  public init(_ value: 나랏글초성) {
     self = .초성(value)
   }
 
-  public init(_ value: 중성) {
+  public init(_ value: 나랏글중성) {
     self = .중성(value)
   }
 
-  public init(_ value: 종성) {
+  public init(_ value: 나랏글종성) {
     self = .종성(value)
   }
 }
 
-extension Symbol {
+extension 나랏글Symbol {
   var char: Character {
     switch self {
     case let .초성(v): return v.char
@@ -106,7 +106,7 @@ extension Symbol {
   }
 }
 
-extension 초성 {
+extension 나랏글초성 {
   var char: Character {
     switch self {
     case .ㄱ: return "\u{1100}"
@@ -132,7 +132,7 @@ extension 초성 {
   }
 }
 
-extension 중성 {
+extension 나랏글중성 {
   var char: Character {
     switch self {
     case .ㅏ: return "\u{1161}"
@@ -160,7 +160,7 @@ extension 중성 {
   }
 }
 
-extension 종성 {
+extension 나랏글종성 {
   var char: Character {
     switch self {
     case .ㄱ: return "\u{11A8}"

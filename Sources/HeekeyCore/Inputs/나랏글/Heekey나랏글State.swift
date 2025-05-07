@@ -1,32 +1,41 @@
 import Foundation
 
-typealias State = [Token]
+public struct Heekey나랏글State: Equatable {
+  public let tokens: [Heekey나랏글Token]
+}
 
-extension State {
+extension Heekey나랏글State: HeekeyInputState {
+  typealias 초성 = 나랏글초성
+  typealias 종성 = 나랏글종성
+  typealias 모음 = 나랏글모음
+
   public var string: String {
     // TODO: CachedParser
     String(
-      String(self.parse().map { $0.char }).precomposedStringWithCanonicalMapping.flatMap {
-        $0.완성형
+      String(self.tokens.parse().map { $0.char }).precomposedStringWithCanonicalMapping.flatMap {
+        $0.한글완성형
       }
     )
   }
+  public var isEmpty: Bool {
+    self.tokens.isEmpty
+  }
 
-  public func dispatch(action: Action) -> (String, Self) {
+  public func dispatch(action: Heekey나랏글Action) -> (String, Self) {
     // self: current state
     // key: input
     // [0]: emitted string
     // [1]: next state
 
-    switch (self.last, action) {
+    switch (self.tokens.last, action) {
     // Common
     case (_, .기능(.backspace)):
-      return ("", self.dropLast())
+      return ("", Self(tokens: self.tokens.dropLast()))
     case (_, .완성문자(let str)):
-      return (self.string + str, [])
+      return (self.string + str, Self(tokens: []))
 
     // Beginning
-    case (nil, .조합문자(let key)): return ("", [key.firstToken])
+    case (nil, .조합문자(let key)): return ("", Self(tokens: [key.firstToken]))
     case (nil, .기능): return ("", self)
 
     case (.자음, .조합문자(let key)):
@@ -65,72 +74,24 @@ extension State {
       }
     }
   }
+}
 
+fileprivate extension Heekey나랏글State {
   private func noop() -> (String, Self) {
     return ("", self)
   }
 
-  private func appending(_ token: Token) -> (String, Self) {
-    return ("", self + [token])
+  private func appending(_ token: Heekey나랏글Token) -> (String, Self) {
+    return ("", Self(tokens: self.tokens + [token]))
   }
 
-  private func replacingLast(to token: Token) -> (String, Self) {
-    return ("", self.dropLast() + [token])
-  }
-}
-
-extension Character {
-  public var 완성형: [Character] {
-    self.unicodeScalars.map {
-      switch $0 {
-      case "\u{1100}": return "ㄱ"
-      case "\u{1101}": return "ㄲ"
-      case "\u{1102}": return "ㄴ"
-      case "\u{1103}": return "ㄷ"
-      case "\u{1104}": return "ㄸ"
-      case "\u{1105}": return "ㄹ"
-      case "\u{1106}": return "ㅁ"
-      case "\u{1107}": return "ㅂ"
-      case "\u{1108}": return "ㅃ"
-      case "\u{1109}": return "ㅅ"
-      case "\u{110A}": return "ㅆ"
-      case "\u{110B}": return "ㅇ"
-      case "\u{110C}": return "ㅈ"
-      case "\u{110D}": return "ㅉ"
-      case "\u{110E}": return "ㅊ"
-      case "\u{110F}": return "ㅋ"
-      case "\u{1110}": return "ㅌ"
-      case "\u{1111}": return "ㅍ"
-      case "\u{1112}": return "ㅎ"
-      case "\u{1161}":	return "ㅏ"
-      case "\u{1162}":	return "ㅐ"
-      case "\u{1163}":	return "ㅑ"
-      case "\u{1164}":	return "ㅒ"
-      case "\u{1165}":	return "ㅓ"
-      case "\u{1166}":	return "ㅔ"
-      case "\u{1167}":	return "ㅕ"
-      case "\u{1168}":	return "ㅖ"
-      case "\u{1169}":	return "ㅗ"
-      case "\u{116A}":	return "ㅘ"
-      case "\u{116B}":	return "ㅙ"
-      case "\u{116C}":	return "ㅚ"
-      case "\u{116D}":	return "ㅛ"
-      case "\u{116E}":	return "ㅜ"
-      case "\u{116F}":	return "ㅝ"
-      case "\u{1170}":	return "ㅞ"
-      case "\u{1171}":	return "ㅟ"
-      case "\u{1172}":	return "ㅠ"
-      case "\u{1173}":	return "ㅡ"
-      case "\u{1174}":	return "ㅢ"
-      case "\u{1175}":	return "ㅣ"
-      default: return Character($0)
-      }
-    }
+  private func replacingLast(to token: Heekey나랏글Token) -> (String, Self) {
+    return ("", Self(tokens: self.tokens.dropLast() + [token]))
   }
 }
 
-extension 조합문자 {
-  var firstToken: Token {
+fileprivate extension Heekey나랏글조합문자 {
+  var firstToken: Heekey나랏글Token {
     switch self {
     case .ㄱ: return .자음(.ㄱ)
     case .ㄴ: return .자음(.ㄴ)
@@ -146,8 +107,8 @@ extension 조합문자 {
   }
 }
 
-extension 자음 {
-  func 쌍자음화() -> 자음? {
+fileprivate extension Heekey나랏글자음 {
+  func 쌍자음화() -> Heekey나랏글자음? {
     switch self {
     case .ㄱ: return .ㄱㄱ
     case .ㄱㄱ: return .ㄱ
@@ -163,7 +124,7 @@ extension 자음 {
     }
   }
 
-  func rotate() -> 자음? {
+  func rotate() -> Heekey나랏글자음? {
     switch self {
     case .ㄱ: return .ㅋ
     case .ㅋ: return .ㄱ
