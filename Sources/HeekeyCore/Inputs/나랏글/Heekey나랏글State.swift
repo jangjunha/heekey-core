@@ -5,8 +5,8 @@ public struct Heekey나랏글State: Equatable {
 }
 
 extension Heekey나랏글State: HeekeyInputState {
-  typealias 초성 = 나랏글초성
-  typealias 종성 = 나랏글종성
+  typealias 초성 = 초성Symbol
+  typealias 종성 = 종성Symbol
   typealias 모음 = 나랏글모음
 
   public var string: String {

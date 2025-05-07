@@ -40,3 +40,48 @@ func char_to_나랏글token(_ ch: Character) -> Heekey나랏글Token {
 func str_to_나랏글tokens(_ str: String) -> [Heekey나랏글Token] {
   return str.map(char_to_나랏글token)
 }
+
+func char_to_두벌식token(_ ch: Character) -> Heekey두벌식Token {
+  typealias 자음 = Heekey두벌식자음
+  typealias 모음 = Heekey두벌식모음
+  switch ch {
+  case "ㄱ": return .init(자음.ㄱ)
+  case "ㄲ": return .init(자음.ㄱㄱ)
+  case "ㄴ": return .init(자음.ㄴ)
+  case "ㄷ": return .init(자음.ㄷ)
+  case "ㄸ": return .init(자음.ㄷㄷ)
+  case "ㄹ": return .init(자음.ㄹ)
+  case "ㅁ": return .init(자음.ㅁ)
+  case "ㅂ": return .init(자음.ㅂ)
+  case "ㅃ": return .init(자음.ㅂㅂ)
+  case "ㅅ": return .init(자음.ㅅ)
+  case "ㅆ": return .init(자음.ㅅㅅ)
+  case "ㅇ": return .init(자음.ㅇ)
+  case "ㅈ": return .init(자음.ㅈ)
+  case "ㅉ": return .init(자음.ㅈㅈ)
+  case "ㅊ": return .init(자음.ㅊ)
+  case "ㅋ": return .init(자음.ㅋ)
+  case "ㅌ": return .init(자음.ㅌ)
+  case "ㅍ": return .init(자음.ㅍ)
+  case "ㅎ": return .init(자음.ㅎ)
+  case "ㅏ": return .init(모음.ㅏ)
+  case "ㅐ": return .init(모음.ㅐ)
+  case "ㅑ": return .init(모음.ㅑ)
+  case "ㅒ": return .init(모음.ㅒ)
+  case "ㅓ": return .init(모음.ㅓ)
+  case "ㅔ": return .init(모음.ㅔ)
+  case "ㅕ": return .init(모음.ㅕ)
+  case "ㅖ": return .init(모음.ㅖ)
+  case "ㅗ": return .init(모음.ㅗ)
+  case "ㅛ": return .init(모음.ㅛ)
+  case "ㅜ": return .init(모음.ㅜ)
+  case "ㅠ": return .init(모음.ㅠ)
+  case "ㅡ": return .init(모음.ㅡ)
+  case "ㅣ": return .init(모음.ㅣ)
+  case _: fatalError("Unsupported ch '\(ch)'")
+  }
+}
+
+func str_to_두벌식tokens(_ str: String) -> [Heekey두벌식Token] {
+  return str.map(char_to_두벌식token)
+}

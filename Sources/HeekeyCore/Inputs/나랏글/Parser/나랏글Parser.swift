@@ -1,5 +1,5 @@
 extension Sequence where Element == Heekey나랏글Token {
-  func parse() -> [나랏글Symbol] {
+  func parse() -> [Symbol] {
     NaratgeulPostParser.parse(
       tokens: TypeA자음PreParser<나랏글모음>.parse(
         tokens: self.map {

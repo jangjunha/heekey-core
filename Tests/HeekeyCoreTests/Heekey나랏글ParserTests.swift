@@ -14,11 +14,11 @@ import Testing
     (
       "ㄱㅡㅣ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅢ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅢ),
       ]
     ),
-  ]) func testParse모음(arg: (String, [나랏글Symbol])) {
+  ]) func testParse모음(arg: (String, [Symbol])) {
     let (str, expected) = arg
     #expect(str_to_나랏글tokens(str).parse() == expected)
   }
@@ -27,67 +27,67 @@ import Testing
     (
       "ㄱㅏㄲㄱ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글종성.ㄱㄱ),
-        나랏글Symbol(나랏글초성.ㄱ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(종성Symbol.ㄱㄱ),
+        Symbol(초성Symbol.ㄱ),
       ]
     ),
     (
       "ㄱㅏㄸㄱ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글초성.ㄷㄷ),
-        나랏글Symbol(나랏글초성.ㄱ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(초성Symbol.ㄷㄷ),
+        Symbol(초성Symbol.ㄱ),
       ]
     ),
     (
       "ㄱㅏㄴㅏ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글초성.ㄴ),
-        나랏글Symbol(나랏글중성.ㅏ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(초성Symbol.ㄴ),
+        Symbol(중성Symbol.ㅏ),
       ]
     ),
     (
       "ㄱㅏㄱㄱ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글종성.ㄱ),
-        나랏글Symbol(나랏글초성.ㄱ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(종성Symbol.ㄱ),
+        Symbol(초성Symbol.ㄱ),
       ]
     ),  // ㄱㄱ + ? => 겹받칩 불가
     (
       "ㄱㅏㄱㅅ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글종성.ㄱㅅ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(종성Symbol.ㄱㅅ),
       ]
     ),
     (
       "ㄱㅏㄱㅅㄱ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글종성.ㄱㅅ),
-        나랏글Symbol(나랏글초성.ㄱ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(종성Symbol.ㄱㅅ),
+        Symbol(초성Symbol.ㄱ),
       ]
     ),  // ㄱㅅ + 자음 => 겹받침 완성
     (
       "ㄱㅏㄱㅅㅏ",
       [
-        나랏글Symbol(나랏글초성.ㄱ),
-        나랏글Symbol(나랏글중성.ㅏ),
-        나랏글Symbol(나랏글종성.ㄱ),
-        나랏글Symbol(나랏글초성.ㅅ),
-        나랏글Symbol(나랏글중성.ㅏ),
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(종성Symbol.ㄱ),
+        Symbol(초성Symbol.ㅅ),
+        Symbol(중성Symbol.ㅏ),
       ]
     ),  // ㄱㅅ + 모음 => 겹받침 안함
-  ]) func testParse받침(arg: (String, [나랏글Symbol])) {
+  ]) func testParse받침(arg: (String, [Symbol])) {
     let (str, expected) = arg
     #expect(str_to_나랏글tokens(str).parse() == expected)
   }
