@@ -1,9 +1,9 @@
-typealias 두벌식PreParser = TypeA자음PreParser<중성Symbol, Never>
+typealias 천지인PreParser = TypeA자음PreParser<Heekey천지인모음, Heekey천지인Punctuations>
 
-extension Sequence where Element == Heekey두벌식Token {
+extension Sequence where Element == Heekey천지인Token {
   func parse() -> [Symbol] {
-    두벌식PostParser.parse(
-      tokens: 두벌식PreParser.parse(
+    천지인PostParser.parse(
+      tokens: 천지인PreParser.parse(
         tokens: self.map {
           .init(from: $0)
         }
@@ -12,8 +12,8 @@ extension Sequence where Element == Heekey두벌식Token {
   }
 }
 
-fileprivate extension 두벌식PreParser.Input {
-  init(from: Heekey두벌식Token) {
+fileprivate extension 천지인PreParser.Input {
+  init(from: Heekey천지인Token) {
     switch from {
     case .자음(.ㄱ): self = .자음(.ㄱ)
     case .자음(.ㄱㄱ): self = .자음(.ㄱㄱ)
@@ -34,20 +34,13 @@ fileprivate extension 두벌식PreParser.Input {
     case .자음(.ㅌ): self = .자음(.ㅌ)
     case .자음(.ㅍ): self = .자음(.ㅍ)
     case .자음(.ㅎ): self = .자음(.ㅎ)
-    case .모음(.ㅏ): self = .모음(.ㅏ)
-    case .모음(.ㅐ): self = .모음(.ㅐ)
-    case .모음(.ㅑ): self = .모음(.ㅑ)
-    case .모음(.ㅒ): self = .모음(.ㅒ)
-    case .모음(.ㅓ): self = .모음(.ㅓ)
-    case .모음(.ㅔ): self = .모음(.ㅔ)
-    case .모음(.ㅕ): self = .모음(.ㅕ)
-    case .모음(.ㅖ): self = .모음(.ㅖ)
-    case .모음(.ㅗ): self = .모음(.ㅗ)
-    case .모음(.ㅛ): self = .모음(.ㅛ)
-    case .모음(.ㅜ): self = .모음(.ㅜ)
-    case .모음(.ㅠ): self = .모음(.ㅠ)
+    case .모음(.ㆍ): self = .모음(.ㆍ)
     case .모음(.ㅡ): self = .모음(.ㅡ)
     case .모음(.ㅣ): self = .모음(.ㅣ)
+    case .punctuations(.dot): self = .other(.dot)
+    case .punctuations(.comma): self = .other(.comma)
+    case .punctuations(.questionMark): self = .other(.questionMark)
+    case .punctuations(.exclamationMark): self = .other(.exclamationMark)
     }
   }
 }

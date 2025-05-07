@@ -1,7 +1,9 @@
+typealias 나랏글PreParser = TypeA자음PreParser<나랏글모음, Never>
+
 extension Sequence where Element == Heekey나랏글Token {
   func parse() -> [Symbol] {
     NaratgeulPostParser.parse(
-      tokens: TypeA자음PreParser<나랏글모음>.parse(
+      tokens: 나랏글PreParser.parse(
         tokens: self.map {
           .init(from: $0)
         }
@@ -12,7 +14,7 @@ extension Sequence where Element == Heekey나랏글Token {
   }
 }
 
-fileprivate extension TypeA자음PreParserInputToken<나랏글모음> {
+fileprivate extension 나랏글PreParser.Input {
   init(from: Heekey나랏글Token) {
     switch from {
     case .자음(.ㄱ): self = .자음(.ㄱ)
@@ -40,7 +42,7 @@ fileprivate extension TypeA자음PreParserInputToken<나랏글모음> {
 }
 
 fileprivate extension 나랏글IntermediateToken {
-  init(from: TypeA자음PreParserOutputToken<나랏글모음>) {
+  init(from: 나랏글PreParser.Output) {
     switch from {
     case .초성(.ㄱ): self = .초성(.ㄱ)
     case .초성(.ㄱㄱ): self = .초성(.ㄱㄱ)

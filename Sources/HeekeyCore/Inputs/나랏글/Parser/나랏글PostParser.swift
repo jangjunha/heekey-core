@@ -1,8 +1,10 @@
 enum NaratgeulPostParser {
   /// 조합 가능한 자소들을 조합하여 중성으로 변환 (모음, 받침)
+  typealias Input = 나랏글IntermediateToken
+  typealias Output = Symbol
 
-  public static func parse<S: Sequence>(tokens: S) -> [Symbol]
-  where S.Element == 나랏글IntermediateToken {
+  public static func parse<S: Sequence>(tokens: S) -> [Output]
+  where S.Element == Input {
     var it = tokens.makeIterator()
     switch (it.next(), it.next(), it.next()) {
     case (nil, _, _): return []

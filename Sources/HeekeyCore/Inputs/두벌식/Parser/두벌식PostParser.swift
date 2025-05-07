@@ -2,7 +2,7 @@ enum 두벌식PostParser {
   typealias Input = 두벌식PreParser.Output
   typealias Output = Symbol
 
-  public static func parse<S: Sequence>(tokens: S) -> [Symbol]
+  public static func parse<S: Sequence>(tokens: S) -> [Output]
   where S.Element == Input {
     var it = tokens.makeIterator()
     switch (it.next(), it.next()) {
