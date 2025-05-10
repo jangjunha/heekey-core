@@ -1,7 +1,11 @@
 import Foundation
 
 public struct Heekey두벌식State {
-  let tokens: [Heekey두벌식Token]
+  public let tokens: [Heekey두벌식Token]
+
+  public init(tokens: [Heekey두벌식Token]) {
+    self.tokens = tokens
+  }
 }
 
 extension Heekey두벌식State: HeekeyInputState {
