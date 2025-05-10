@@ -5,11 +5,18 @@ import Testing
 @Suite struct Heekey두벌식ParserTests {
   @Test(arguments: [
     (
+      "ㄱㅏㅣ",
+      [
+        Symbol(초성Symbol.ㄱ),
+        Symbol(중성Symbol.ㅏ),
+        Symbol(중성Symbol.ㅣ),
+      ]
+    ),
+    (
       "ㄱㅡㅣ",
       [
         Symbol(초성Symbol.ㄱ),
-        Symbol(중성Symbol.ㅡ),
-        Symbol(중성Symbol.ㅣ),
+        Symbol(중성Symbol.ㅢ),
       ]
     ),
     (

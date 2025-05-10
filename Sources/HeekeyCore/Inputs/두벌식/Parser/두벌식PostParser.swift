@@ -8,6 +8,23 @@ enum 두벌식PostParser {
     switch (it.next(), it.next()) {
     case (nil, _): return []
 
+    // 모음 조합
+    case (.모음(.ㅡ), .모음(.ㅣ)):
+      return [.중성(.ㅢ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅜ), .모음(.ㅣ)):
+      return [.중성(.ㅟ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅜ), .모음(.ㅔ)):
+      return [.중성(.ㅞ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅜ), .모음(.ㅓ)):
+      return [.중성(.ㅝ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅗ), .모음(.ㅣ)):
+      return [.중성(.ㅚ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅗ), .모음(.ㅐ)):
+      return [.중성(.ㅙ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(.ㅗ), .모음(.ㅏ)):
+      return [.중성(.ㅘ)] + parse(tokens: tokens.dropFirst(2))
+    case (.모음(let v), _): return [.중성(v)] + parse(tokens: tokens.dropFirst())
+
     // 받침 조합
     case (.종성(.ㄱ), .종성(.ㅅ)): return [.종성(.ㄱㅅ)] + parse(tokens: tokens.dropFirst(2))
     case (.종성(.ㄴ), .종성(.ㅈ)): return [.종성(.ㄴㅈ)] + parse(tokens: tokens.dropFirst(2))
@@ -22,7 +39,6 @@ enum 두벌식PostParser {
     case (.종성(.ㅂ), .종성(.ㅅ)): return [.종성(.ㅂㅅ)] + parse(tokens: tokens.dropFirst(2))
 
     case (.초성(let v), _): return [.초성(.init(v))] + parse(tokens: tokens.dropFirst())
-    case (.모음(let v), _): return [.중성(v)] + parse(tokens: tokens.dropFirst())
     case (.종성(let v), _): return [.종성(.init(v))] + parse(tokens: tokens.dropFirst())
     }
   }
