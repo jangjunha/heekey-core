@@ -2,6 +2,10 @@ import Foundation
 
 public struct Heekey나랏글State: Equatable {
   public let tokens: [Heekey나랏글Token]
+
+  public init(_ tokens: [Heekey나랏글Token]) {
+    self.tokens = tokens
+  }
 }
 
 extension Heekey나랏글State: HeekeyInputState {
