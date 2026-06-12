@@ -1,10 +1,10 @@
 /// Erasible Unit
-public enum Heekey나랏글Token: Equatable {
+public enum Heekey나랏글Token: Equatable, Hashable {
   case 자음(Heekey나랏글자음)
   case 모음(Heekey나랏글모음)
 }
 
-public enum Heekey나랏글자음: Equatable {
+public enum Heekey나랏글자음: Equatable, Hashable {
   case ㄱ
   case ㄱㄱ
   case ㄴ
@@ -26,7 +26,7 @@ public enum Heekey나랏글자음: Equatable {
   case ㅎ
 }
 
-public enum Heekey나랏글모음: Equatable {
+public enum Heekey나랏글모음: Equatable, Hashable {
   case ㅏ  // ㅏ
   case ㅑ  // ㅏ 획
   case ㅓ  // ㅏ ㅏ
